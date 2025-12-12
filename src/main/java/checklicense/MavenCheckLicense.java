@@ -71,6 +71,9 @@ public final class MavenCheckLicense extends AbstractMojo {
     @Parameter
     public Set<String> ignored;
 
+    @Parameter
+    public Set<String> ignoredGroupIds;
+
     public void execute() throws MojoFailureException {
         if (!enabled) return;
 
@@ -95,6 +98,9 @@ public final class MavenCheckLicense extends AbstractMojo {
         final var compliant = new HashSet<Compliant>();
 
         for (final var artifact : artifacts) {
+            if (ignoredGroupIds.contains(artifact.getGroupId())) {
+                continue;
+            };
             final var licenses = loadLicensesFor(artifact);
             final var rule = findMatchingRule(licenses, rules);
 
